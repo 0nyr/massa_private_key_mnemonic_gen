@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang='fr'>
+    <head>
+        <title>massa-private-key-mnemonic-gen</title>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <meta name="description" content="Votre avenir geek aujourd'hui !">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- open graph protocol for social medias, more info: https://ogp.me/-->
+        <meta property="og:locale" content="en_EN" />
+        <meta property="og:title" content="massa-private-key-mnemonic-gen" />
+        <meta property="og:type" content="services" />
+        <meta property="og:url" content="https://0nyr.github.io/massa_private_key_mnemonic_gen/" />
+        <!-- personal css (WARN: load before personal js) -->
+        <link rel="stylesheet" type="text/css" href="./css/general_stylesheet.css" />
+        <link rel="stylesheet" type="text/css" href="./css/index.css" />
+        <!-- personal js -->
+        <script src="./js/display.js" defer></script>
+        <script src="./js/index.js" defer></script>
+    </head>
+
+    <body id="grid_main_container">
+        <header>
+            <nav id="top_nav">
+                <span id="nav_title">
+                    <div id="website_logo">
+                        <h1>massa-private-key-mnemonic-gen</h1>
+                    </div>
+                </span>
+                <span id="theme_toggler">
+                    <label class="switch">
+                        <input type="checkbox" onclick="toggleTheme()">
+                        <span class="slider round"></span>
+                    </label>
+                </span>
+            </nav>
+        </header>
+
+        <main>
+            <section id="title">
+                <p>Generate a private key for <a href="https://massa.net" target="_blank">MASSA blockchain</a></p>
+                <p>You can use your generate private key to view you address at 
+                    <a href="https://massa.net/testnet/wallet" target="_blank">MASSA online Wallet</a>
+                </p>
+            </section>
+    
+            <section id="code_area">
+                <p>Enter some words in this textarea...</p>
+                <button id="clear" type="button" 
+                onclick="clearTextarea(['input_textarea', 'result_textarea'])">
+                    Clear
+                </button>
+                <button id="populate" type="button" 
+                onclick="generateRandomListOfWords('input_textarea')">
+                    Populate with random words
+                </button>
+
+                <textarea id="input_textarea">Enter your mnemonic here</textarea>
+                
+                <button id="process_input" type="button" 
+                onclick="processInput('input_textarea')">
+                    Generate Private Key
+                </button>
+                <p id="demo"></p>
+
+                <textarea id="result_textarea">Generated Private Key appears here</textarea>
+            </section>
+        </main>
+
+        <footer id="bottom_footer">
+            <span id="legal">
+                <p>Hosted on GitHub Pages. Code is Open Source.</p>
+                <p>© 2023. <a href="https://onyr.net">Onyr</a> 
+                    (Florian Rascoussier)
+                </p>
+            </span>
+        </footer>
+
+    </body>
+</html>

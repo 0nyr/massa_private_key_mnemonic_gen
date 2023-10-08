@@ -1,0 +1,178 @@
+:root{
+    /* Dark theme */
+    --dark-bg-color: #16212e;
+    --dark-container-dark-bg-color: #1A1A1A;
+    --dark-container-soft-dark-color: #3A3A3A;
+    --dark-container-light-bg-color: #454e59;
+    --dark-text-color: #EAEAEA;
+    --dark-title-color: #B3B3B3;
+
+    /* Light theme */
+    --light-bg-color: #F0F0F0;
+    --light-container-dark-bg-color: #D0D0D0;
+    --light-container-soft-dark-color: #C0C0C0;
+    --light-container-light-bg-color: #E0E0E0;
+    --light-text-color: #1A1A1A;
+    --light-title-color: #5A5A5A;
+
+    /* Default theme */
+    --bg-color: var(--light-bg-color);
+    --container-dark-bg-color: var(--light-container-dark-bg-color);
+    --container-soft-dark-color: var(--light-container-soft-dark-color);
+    --container-light-bg-color: var(--light-container-light-bg-color);
+    --text-color: var(--light-text-color);
+    --title-color: var(--light-title-color);
+
+    /* color gradients */
+    --left-orange-color: #e55838;
+    --right-red-color: #eb3f50;
+    --orange-red-gradient: linear-gradient(to right,
+        var(--left-orange-color),
+        var(--right-red-color)
+    );
+
+    /* font-family */
+    --text-font: 'Fira Code Nerd', monospace, sans-serif;
+    --text-font-weight: 400;
+    --title-font: 'Fira Code Nerd', monospace;
+    --title-font-weight: 700;
+}
+
+
+
+html, body {
+	background-color: var(--bg-color);
+}
+
+/* fonts */
+h1, h2, h3, h4, button {
+    font-family: var(--title-font);
+    font-weight: var(--title-font-weight);
+	font-size: 2em;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+p, th, td, textarea {
+    font-family: var(--text-font);
+    font-weight: var(--text-font-weight);
+    font-size: 1.5em;
+    padding: 1%;
+}
+
+/* colors */
+h1, h2, h3, h4 {
+    color: var(--title-color);
+}
+
+p, th, td {
+    color: var(--text-color);
+}
+
+/* logos */
+/* center element inside another: http://css-workshop.com/css-center-textimagediv-in-middle-of-parent-div-container/ */
+.user_img {
+    height: 50px;
+    width: 50px;
+    background-color: var(--container-light-bg-color);
+    border-radius: 50%;
+    position: relative;
+}
+
+.user_img img {
+    height: 40px;
+    width: 40px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+/* toggle button */
+/* w3school: https://www.w3schools.com/howto/howto_css_switch.asp */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+  
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+  
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--container-dark-bg-color);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+  
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+  
+input:checked + .slider {
+    background-color: var(--container-light-bg-color);
+}
+  
+input:focus + .slider {
+    box-shadow: 0 0 1px var(--container-light-bg-color);
+}
+  
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+  
+.slider.round:before {
+    border-radius: 50%;
+}
+
+textarea {
+    border-radius: 50px;
+    background-color: var(--container-light-bg-color);
+    margin: 0 auto;
+}
+
+/* button */
+button {
+    font-weight: 700;
+	font-size: 30px;
+	padding: 3px 20px 7px 20px ; /* add to the height and width */
+	text-align: center;
+	margin: 10px;
+	display: inline-block;
+	background: var(--orange-red-gradient);
+	border-radius: 30px;
+	color: black;
+	box-shadow: 0px 0px 5px 0px;
+}
+
+button:hover {
+    background: white;
+}

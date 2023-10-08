@@ -1,0 +1,88 @@
+/* general settings */
+textarea {
+    min-width: 500px;
+    width: 100%;
+    min-height: 375px;
+    margin-bottom: 45px;
+    background-color: var(--container-light-bg-color);
+}
+
+/* grid page layout */
+header {
+    background-color: var(--container-soft-dark-color);
+    grid-area: header;
+}
+
+main {
+    grid-area: main;
+}
+
+footer {
+    background-color: var(--container-soft-dark-color);
+    grid-area: footer;
+}
+
+#grid_main_container {
+    display: grid;
+    grid-template-columns: 5% auto auto 5%;
+    grid-template-rows: auto;
+    grid-template-areas: 
+        "header header header header"
+        ". main main ."
+        "footer footer footer footer";
+}
+
+/* grid elements */
+
+#nav_title {
+    align-self: center;
+    grid-area: nav_title;
+}
+
+#theme_toggler {
+    align-self: center;
+    grid-area: theme_toggler;
+}
+
+#top_nav {
+    display: grid;
+    grid-template-columns: 3% 40% auto auto 10% 3%;
+    grid-template-rows: auto;
+    grid-template-areas: 
+        ". nav_title . . theme_toggler .";
+}
+
+
+
+#legal {
+    align-self: center;
+    grid-area: legal;
+}
+
+#bottom_footer {
+    background-color: var(--container-soft-dark-color);
+    display: grid;
+    grid-template-columns: 3% 10% auto auto 10% 3%;
+    grid-template-rows: auto;
+    grid-template-areas: 
+        ". . legal legal . .";
+}
+
+/* single elements */
+#website_logo {
+    display: block;
+    align-self: center;
+    padding: 3%;
+}
+
+#legal {
+    display: block;
+    align-self: center;
+    padding: 3%;
+}
+
+#title {
+    display: block;
+    align-self: center;
+    padding: 3%;
+}

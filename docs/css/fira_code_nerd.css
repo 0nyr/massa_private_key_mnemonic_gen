@@ -1,0 +1,47 @@
+/* Fira Code Nerd Font Regular */
+@font-face {
+    font-family: 'Fira Code Nerd';
+    src: url('docs/res/FiraCodeNerd/FiraCodeNerdFont-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* Fira Code Nerd Font Bold */
+@font-face {
+    font-family: 'Fira Code Nerd';
+    src: url('docs/res/FiraCodeNerd/FiraCodeNerdFont-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* Fira Code Nerd Font Light */
+@font-face {
+    font-family: 'Fira Code Nerd';
+    src: url('docs/res/FiraCodeNerd/FiraCodeNerdFont-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+/* Fira Code Nerd Font Medium */
+@font-face {
+    font-family: 'Fira Code Nerd';
+    src: url('docs/res/FiraCodeNerd/FiraCodeNerdFont-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+/* Fira Code Nerd Font SemiBold */
+@font-face {
+    font-family: 'Fira Code Nerd';
+    src: url('docs/res/FiraCodeNerd/FiraCodeNerdFont-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+/* Fira Code Nerd Font Retina */
+@font-face {
+    font-family: 'Fira Code Nerd';
+    src: url('docs/res/FiraCodeNerd/FiraCodeNerdFont-Retina.ttf') format('truetype');
+    font-weight: normal; /* Adjust if you know the specific weight for Retina */
+    font-style: normal;
+}
