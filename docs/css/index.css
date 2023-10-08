@@ -1,12 +1,3 @@
-/* general settings */
-textarea {
-    min-width: 500px;
-    width: 100%;
-    min-height: 375px;
-    margin-bottom: 45px;
-    background-color: var(--container-light-bg-color);
-}
-
 /* grid page layout */
 header {
     background-color: var(--container-soft-dark-color);

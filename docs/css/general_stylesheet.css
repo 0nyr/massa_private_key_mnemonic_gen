@@ -1,9 +1,9 @@
 :root{
     /* Dark theme */
     --dark-bg-color: #16212e;
-    --dark-container-dark-bg-color: #1A1A1A;
-    --dark-container-soft-dark-color: #3A3A3A;
-    --dark-container-light-bg-color: #454e59;
+    --dark-container-dark-bg-color: #110c19;
+    --dark-container-soft-dark-color: #42444d;
+    --dark-container-light-bg-color: #4e5864;
     --dark-text-color: #EAEAEA;
     --dark-title-color: #B3B3B3;
 
@@ -55,7 +55,7 @@ h1 {
     font-size: 3em;
 }
 
-p, th, td, textarea {
+p, th, td, textarea, div {
     font-family: var(--text-font);
     font-weight: var(--text-font-weight);
     font-size: 1.5em;
@@ -67,7 +67,7 @@ h1, h2, h3, h4 {
     color: var(--title-color);
 }
 
-p, th, td {
+p, th, td, div {
     color: var(--text-color);
 }
 
@@ -156,7 +156,11 @@ input:checked + .slider:before {
 textarea {
     border-radius: 50px;
     background-color: var(--container-light-bg-color);
-    margin: 0 auto;
+    min-width: 50px;
+    width: 90%;
+    min-height: 50px;
+    margin: 1em auto;
+    padding: 1em;
 }
 
 /* button */
@@ -175,4 +179,8 @@ button {
 
 button:hover {
     background: white;
+}
+
+a {
+    color: var(--right-red-color);
 }

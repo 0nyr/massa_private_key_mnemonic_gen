@@ -51,18 +51,24 @@ async function generateConcatenatedHash(words, nbFirstBytes) {
 
 // Generate Massa private key
 async function generateMassaPrivateKeyFromMnemonic(mnemonic) {
-    const nbFirstBytes = 2;
+    const nbFirstBytes = 1;
     const concatenatedHash = await generateConcatenatedHash(mnemonic, nbFirstBytes);
     const checksum = (await doubleSha256(concatenatedHash)).substring(0, 8);
     const inputWithChecksum = concatenatedHash + checksum;
     const encoded = base58Encode(inputWithChecksum);
+
+    // perform check. Massa generated private keys 
+    // should be between 18 (included) to 62 (included) characters
+    if (encoded.length < 18 || encoded.length > 62) {
+        print_logs_in_page("Error: generated private key is invalid. Please check your mnemonic and try again.");
+    }
 
     return 'S' + encoded;
 }
 
 // Button Functions
 async function processInput(idTextarea) {
-    console.log("Generate Private Key from Mnemonic for Massa");
+    print_logs_in_page("Generating Private Key from Mnemonic for Massa.");
     const input = document.getElementById(idTextarea).value;
     const res = await generateMassaPrivateKeyFromMnemonic(input);
 
@@ -73,25 +79,41 @@ function clearTextarea(textareaIds) {
     textareaIds.forEach((id) => {
         document.getElementById(id).value = "";
     });
+
+    clear_logs_in_page();
 }
 
 function generateRandomListOfWords(idTextarea) {
-    const nbWords = 16;
+    const nbWords = 32;
     let words = [];
     try {
-        let words = generateRandomWords(16);
+        words = generateRandomWords(nbWords);
     } catch (e) {
-        console.log(e);
+        print_logs_in_page(e);
         words = ["Error", "loading", "random", "words", "file", "from", "docs/res/random_words.txt", "Please", "check", "the", "file", "and", "try", "again", "or", "use", "your", "own", "list", "of", "words"];
     }
 
-    document.getElementById("result_textarea").value = words;
+    const mnemonic = words.join(" ");
+    document.getElementById(idTextarea).value = mnemonic;
 }
 
-async function generateRandomWords(numWords) {
-    const response = await fetch('docs/res/random_words.txt');
-    const data = await response.text();
-    const words = data.split(/\s+/);
+function arrangementWithRepetition(n, k) {
+    return Math.pow(n, k);
+}
+
+function calculateEntropy(n, k) {
+    const arrangements = Math.pow(n, k);
+    const entropy = Math.log2(arrangements);
+    return entropy;
+}
+
+function generateRandomWords(numWords) {
+    const words = get_random_word_list();
+
+    // Security: log the combination of words for specified number of words
+    const nb_combinations = arrangementWithRepetition(words.length, numWords);
+    const entropy = calculateEntropy(words.length, numWords);
+    console.log("Number of possible words outcome: " + nb_combinations + " (" + entropy + " bits of entropy)");
   
     const randomWords = [];
     for (let i = 0; i < numWords; i++) {
@@ -101,9 +123,15 @@ async function generateRandomWords(numWords) {
   
     return randomWords;
 }
-  
-  // Example usage
-generateRandomWords(5).then((randomWords) => {
-    console.log(randomWords);
-});
+
+function print_logs_in_page(message) {
+    const log_id = "log_area";
+    console.log(message);
+    document.getElementById(log_id).innerText = message;
+}
+
+function clear_logs_in_page() {
+    const log_id = "log_area";
+    document.getElementById(log_id).innerText = "";
+}
   
