@@ -29,6 +29,7 @@ some go up to 256 bits or more for higher levels of security. A low entropy mean
 
 ## TODO
 
+* [ ] ERROR: fix Invalid Checksum error.
 * [ ] Add unit tests
 * [ ] Add a Favicon
 * [X] Display error message if generated key doesn't have the right character size. More info [here](https://docs.massa.net/docs/learn/architecture/basic-concepts#secret-key).

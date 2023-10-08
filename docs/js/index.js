@@ -1,15 +1,8 @@
 // SHA256 Hashing using Web Crypto API
-async function sha256(data) {
-    const msgBuffer = new TextEncoder().encode(data);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-// Double SHA256
-async function doubleSha256(data) {
-    const firstHash = await sha256(data);
-    return sha256(firstHash);
+async function sha256(buffer) {
+    const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+    const hashArray = new Uint8Array(hashBuffer);
+    return hashArray;
 }
 
 // Base58 encoding
@@ -21,41 +14,122 @@ function byteArrayToBigInt(byteArray) {
     return value;
 }
 
-function base58Encode(hexString) {
-    const alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-    let encoded = '';
-    let num = byteArrayToBigInt(new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16))));
-
-    while (num > 0) {
-        const divmod = num % BigInt(58);
-        encoded = alphabet[Number(divmod)] + encoded;
-        num = num / BigInt(58);
+function byteArrayToBigInt(byteArray) {
+    let value = BigInt(0);
+    for (let i = 0; i < byteArray.length; i++) {
+        value = (value << BigInt(8)) + BigInt(byteArray[i]);
     }
-
-    return encoded;
+    return value;
 }
 
-// Generate concatenated hash
-async function generateConcatenatedHash(words, nbFirstBytes) {
-    const wordList = words.split(" ");
-    let concatenatedHash = "";
+const ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 
-    for (const word of wordList) {
-        const hash = await sha256(word);
-        const truncatedHash = hash.substring(0, nbFirstBytes * 2);
-        concatenatedHash += truncatedHash;
+function base58Encode(buffer) {
+  // Count leading zeros
+  let zeroCount = 0;
+  while (buffer[zeroCount] === 0) {
+    zeroCount++;
+  }
+
+  // Convert the buffer to a big integer.
+  let big_int = byteArrayToBigInt(buffer);
+
+  // Initialize the base58 encoded string.
+  let encodedString = '';
+
+  // Repeatedly divide the big integer by 58 and add the remainder to the base58 encoded string.
+  while (big_int > 0) {
+    const remainder = big_int % 58n;
+    encodedString = ALPHABET[Number(remainder)] + encodedString;
+    big_int /= 58n;
+  }
+
+  // Prepend leading zeros
+  while (zeroCount > 0) {
+    encodedString = '1' + encodedString;
+    zeroCount--;
+  }
+
+  // Return the base58 encoded string.
+  return encodedString;
+}
+
+// This is a developer test function
+function test_base58Encode() {
+    const buffer = new Uint8Array([]);
+    const encodedString = base58Encode(buffer);
+    if (encodedString !== '') {
+        throw new Error("Error: base58Encode([]) should be empty string");
     }
 
-    return concatenatedHash;
+    const buffer2 = new Uint8Array([72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100]);
+    const encodedString2 = base58Encode(buffer2);
+    if (encodedString2 !== '1L625c4e3664332452b9') {
+        throw new Error("Error: base58Encode('Hello, world!') should be 1L625c4e3664332452b9");
+    }
+
+    const buffer3 = new Uint8Array(100).fill((Math.random() * 255) | 0);
+    const encodedString3 = base58Encode(buffer3);
+    if (encodedString3.length !== 137) {
+        throw new Error("Error: base58Encode(random) should be 137 characters");
+    }
+}
+
+// Test the function
+const uint8Array = new Uint8Array([255, 254, 253, 252]);
+console.log("Output should be 8Vh1Nm134: ", base58Encode(uint8Array));  // Output should be "8Vh1Nm134"
+
+// Generate concatenated hash
+async function generateConcatenatedHash(words) {
+    const wordList = words.split(" ");
+    const nbBytes = wordList.length; // 1 byte per word
+    let concatenatedHash = new Uint8Array(nbBytes);
+
+    for (let i = 0; i < nbBytes; i++) {
+        const word = wordList[i];
+        const word_buffer = new TextEncoder().encode(word);
+        const hash = await sha256(word_buffer);
+        concatenatedHash[i] = hash[0]; // keep only first byte
+    }
+
+    return concatenatedHash
+}
+
+async function checkPayloadWithChecksum(buffer) {
+    var payload = buffer.slice(0, -4)
+    var checksum = buffer.slice(-4, buffer.length)
+
+    // double_sha256(payload)[:4]
+    let newChecksum = (await sha256(payload)).slice(0, 4);
+
+    console.log("payload:", payload);
+    console.log("checksum:", checksum);
+    console.log("newChecksum:", newChecksum);
+
+    if (checksum[0] ^ newChecksum[0] |
+        checksum[1] ^ newChecksum[1] |
+        checksum[2] ^ newChecksum[2] |
+        checksum[3] ^ newChecksum[3]
+    ) {
+        throw new Error('Invalid checksum')
+    }
 }
 
 // Generate Massa private key
+// mnemonic: string of words separated by space
 async function generateMassaPrivateKeyFromMnemonic(mnemonic) {
-    const nbFirstBytes = 1;
-    const concatenatedHash = await generateConcatenatedHash(mnemonic, nbFirstBytes);
-    const checksum = (await doubleSha256(concatenatedHash)).substring(0, 8);
-    const inputWithChecksum = concatenatedHash + checksum;
-    const encoded = base58Encode(inputWithChecksum);
+    const payload = await generateConcatenatedHash(mnemonic);
+    const checksum = await sha256(payload);
+    console.log("concatenatedHash:", payload);
+
+    let buffer = new Uint8Array(payload.length + 4); // create a new buffer
+    buffer.set(payload); // copy concatenatedHash to buffer
+    // copy first 4 bytes of hashed payload to end of buffer (this is the checksum)
+    buffer.set(checksum.slice(0, 4), payload.length); 
+    console.log(">>> buffer:", buffer);
+    checkPayloadWithChecksum(buffer);
+
+    const encoded = base58Encode(buffer);
 
     // perform check. Massa generated private keys 
     // should be between 18 (included) to 62 (included) characters
