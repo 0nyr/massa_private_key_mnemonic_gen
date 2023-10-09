@@ -67,7 +67,7 @@ h1, h2, h3, h4 {
     color: var(--title-color);
 }
 
-p, th, td, div {
+p, th, td, div, textarea {
     color: var(--text-color);
 }
 

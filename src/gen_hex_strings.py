@@ -199,40 +199,51 @@ def check_base58_from_library(base58_str):
         print("ERROR: Invalid base58 string: {}".format(base58_str))
         return False
 
-   
+def generate_massa_private_key(mnemonix, nb_bytes):
+    """
+    Generates a MASSA private key from a mnemonic.
+    """
+    # Generate bytes from the mnemonic
+    bytes_from_mnemonic = generate_concatenated_hash(mnemonix, nb_bytes)
+    
+    # Add the version number to first byte
+    versioned_bytes = bytes([MASSA_VERSION_NUMBER]) + bytes_from_mnemonic
+    
+    # Compute the checksum
+    checksum = double_sha256(versioned_bytes)[:4]
+    
+    # Concatenate the versioned bytes and the checksum
+    input_with_checksum = versioned_bytes + checksum
+    
+    # Encode the input with checksum
+    encoded = base58_encode(input_with_checksum)
+    
+    # Add the 'S' prefix
+    final_private_key = 'S' + encoded
+
+    # Check the length of the private key
+    if len(final_private_key) != 51:
+        print("WARNING: MASSA private key should be 51 characters long, but is:", len(final_private_key))
+    
+    return final_private_key
 
 if __name__ == "__main__":
     cli_args = CLIArguments()
 
-    print(generate_hex_string())  # Should print a random 64-character hex string
-    print("generate_hex_string('test'):", generate_hex_string("test"))  # Should start with the hex representation of "test"
-    print("decode_hex_string(generate_hex_string('test')):", decode_hex_string(generate_hex_string('test')))  # Should print b'test'
-
-    print(f"Generated from INPUT({cli_args.args.input}):", generate_hex_string(cli_args.args.input))
-
     # example base58
+    print("--- Reverse engineering example base58 from MASSA Wallet gen ---")
     example_base58 = "S12mnpzhmnE88zhwPKssESnz4BybRQoeEMh28WTx8VKPEJffHegw" # generated from https://massa.net/testnet/wallet
-    print(f"Test Base58 checksum validity: {check_base58_checksum(example_base58)}", "and from library:", check_base58_from_library(example_base58))
+    example_base58_payload_checksum = example_base58.replace("S1", "")
+    print(f"Test Base58 checksum validity: {check_base58_checksum(example_base58_payload_checksum)}", "and from library:", check_base58_from_library(example_base58_payload_checksum))
+    example_base58_decoded = base58_decode(example_base58.replace("S", ""))
+    print("MASSA decoded:", example_base58_decoded, "of length:", len(example_base58_decoded))
+    print("--- --- ---")
 
-    exemple_2 = "3qWLCbpiY1zoiEYzasjGnwRJUKbDA8QcVimpLeX3Mckn4xaiwDwmma"
-    print(f"Test Base58 checksum validity: {check_base58_checksum(exemple_2)}", "and from library:", check_base58_from_library(exemple_2))
+    # some testing 
+    test_bytes_hello_world = b"hello world"
+    print("test_hello_word_with_checksum as list of bytes:", list(test_bytes_hello_world))
 
-    # Test the new function
-    input_data = generate_concatenated_hash(cli_args.args.input, cli_args.args.nb_bytes)  # Replace this with the data you want to encode
-    checksum = double_sha256(input_data)[:4]
-    input_with_checksum = input_data + checksum
-    encoded = base58_encode(input_with_checksum)
-    encoded_using_library = bytes_to_base58_library(input_with_checksum)
-    print(f"Base58 encoded data: {encoded}")
-    print(f"Base58 encoded from library: {encoded_using_library}", f"of char length: {len(encoded_using_library)}")
-    print(f"Base58 checksum validity: {check_base58_checksum(encoded)}", "and from library:", check_base58_from_library(encoded))
-    print(f"Base58 encoded data string length: {len(encoded)}")
-
-    # generate MASSA private key from mnemonic
-    input_data = generate_concatenated_hash(cli_args.args.input, cli_args.args.nb_bytes)  # Replace this with the data you want to encode
-    checksum = double_sha256(input_data)[:4]
-    input_with_checksum = input_data + checksum
-    encoded = base58_encode(input_with_checksum)
-    assert(len(encoded) >= 18 and len(encoded) <= 62, "MASSA encoded string length should be between 18 and 62 characters")
-    print(">>> MASSA private key:", "S" + encoded)
+    # generate MASSA private key from mnemonic    
+    private_key = generate_massa_private_key(cli_args.args.input, cli_args.args.nb_bytes)
+    print(">>> MASSA private key:", private_key, "of nb chars:", len(private_key))
 
