@@ -28,8 +28,9 @@ Note that modern encryption schemes often require at least 128 bits of entropy, 
 some go up to 256 bits or more for higher levels of security. A low entropy means that an attacker would have a relatively easier time cracking the key through brute-force methods. Add more words to the list, or add your own, to increase those numbers and improve security.
 
 ## TODO
+Here is a list of things to do. Any help welcomed.
 
-* [ ] ERROR: fix Invalid Checksum error.
+* [X] ERROR: fix Invalid Checksum error.
 * [ ] Add unit tests
 * [ ] Add a Favicon
 * [X] Display error message if generated key doesn't have the right character size. More info [here](https://docs.massa.net/docs/learn/architecture/basic-concepts#secret-key).
